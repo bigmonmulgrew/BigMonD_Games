@@ -19,7 +19,7 @@ void APongBall::BeginPlay()
 {
 	Super::BeginPlay();
 
-	MyVelocity = FVector(300, 0,333);
+	MyVelocity = FVector(1, 0, 1);
 	
 }
 
