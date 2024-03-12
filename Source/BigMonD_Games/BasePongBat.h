@@ -20,6 +20,8 @@ protected:
 	virtual void BeginPlay() override;
 	UPROPERTY(VisibleAnywhere, Category= "Sprites");
 	class UPaperSpriteComponent* MySprite;
+	UPROPERTY(VisibleAnywhere, Category = "Sprites");
+	class UBoxComponent* MyCollider;
 
 public:	
 	// Called every frame

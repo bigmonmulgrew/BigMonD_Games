@@ -3,6 +3,7 @@
 
 #include "PongBall.h"
 #include "PaperSpriteComponent.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 APongBall::APongBall()
@@ -12,6 +13,14 @@ APongBall::APongBall()
 
 	MySprite = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("My Image"));
 	RootComponent = MySprite;
+
+	MyCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Ball Hit Box"));
+	MyCollider->SetBoxExtent(FVector(32, 32,32)); // More evil magic numbers
+	MyCollider->SetCollisionEnabled((ECollisionEnabled::QueryOnly));
+	MyCollider->SetupAttachment(RootComponent);
+
+	MyCollider->OnComponentBeginOverlap.AddDynamic(this, &APongBall::OnCollision);
+	
 }
 
 // Called when the game starts or when spawned
@@ -19,7 +28,11 @@ void APongBall::BeginPlay()
 {
 	Super::BeginPlay();
 
-	MyVelocity = FVector(1, 0, 1);
+	MyVelocity = FVector(300, 0, 300);
+
+	// Evil magic numbers.
+	HalfPlayFieldHeight = (2048 / 1.777) / 2;
+	HalfPlayFieldWidth = (2048 / 2);
 	
 }
 
@@ -28,7 +41,23 @@ void APongBall::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	SetActorLocation((GetActorLocation()+MyVelocity));
+	
+	
+	const FVector DeltaVector = MyVelocity * DeltaTime;
+	FVector MyUpdatedLocation = (GetActorLocation() + DeltaVector);
 
+	ChangeDirection(&MyUpdatedLocation);
+	
+	SetActorLocation(MyUpdatedLocation);
+
+	
+}
+
+void APongBall::ChangeDirection(FVector* MyUpdatedLocaiton)
+{
+	if     (MyUpdatedLocaiton->Z >  HalfPlayFieldHeight) MyVelocity.Z = -300; // Magic number bad
+	else if(MyUpdatedLocaiton->Z < -HalfPlayFieldHeight) MyVelocity.Z =  300; // Magic number bad
+	else if(MyUpdatedLocaiton->X >  HalfPlayFieldWidth)	 MyVelocity.X = -300; // Magic number bad
+	else if(MyUpdatedLocaiton->X < -HalfPlayFieldWidth)	 MyVelocity.X =  300; // Magic number bad
 }
 

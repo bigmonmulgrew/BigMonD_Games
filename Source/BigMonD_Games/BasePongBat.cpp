@@ -3,6 +3,7 @@
 
 #include "BasePongBat.h"
 #include "PaperSpriteComponent.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 ABasePongBat::ABasePongBat()
@@ -13,6 +14,10 @@ ABasePongBat::ABasePongBat()
 	MySprite = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("My Image"));
 	RootComponent = MySprite;
 
+	MyCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Ball Hit Box"));
+	MyCollider->SetCollisionEnabled((ECollisionEnabled::QueryOnly));
+	MyCollider->SetBoxExtent(FVector(32, 32,32)); // More evil magic numbers
+	MyCollider->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned

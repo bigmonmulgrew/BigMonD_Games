@@ -12,7 +12,12 @@ class BIGMOND_GAMES_API APongBall : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+public:
+	UFUNCTION()
+	void OnCollision(UPrimitiveComponent* OverlappedComponent,
+					AActor* OtherActor, UPrimitiveComponent* OtherComp,
+					int32 OtherBodyIndex, bool bFromSweep,
+					const FHitResult& SweepResult);
 	// Sets default values for this actor's properties
 	APongBall();
 
@@ -21,6 +26,8 @@ protected:
 	virtual void BeginPlay() override;
 	UPROPERTY(VisibleAnywhere, Category = "Sprites");
 	class UPaperSpriteComponent* MySprite;
+	UPROPERTY(VisibleAnywhere, Category = "Sprites");
+	class UBoxComponent* MyCollider;
 
 public:	
 	// Called every frame
@@ -28,4 +35,8 @@ public:
 	
 private:
 	FVector MyVelocity;
+	float HalfPlayFieldHeight;
+	float HalfPlayFieldWidth;
+	void ChangeDirection(FVector* MyUpdatedLocaiton);
+	//void OnCollision();
 };
