@@ -61,3 +61,10 @@ void APongBall::ChangeDirection(FVector* MyUpdatedLocaiton)
 	else if(MyUpdatedLocaiton->X < -HalfPlayFieldWidth)	 MyVelocity.X =  300; // Magic number bad
 }
 
+void APongBall::OnCollision(UPrimitiveComponent* OverlappedComponent,
+							AActor* OtherActor, UPrimitiveComponent* OtherComp,
+							int32 OtherBodyIndex, bool bFromSweep,
+							const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("I hit something!"));
+}
