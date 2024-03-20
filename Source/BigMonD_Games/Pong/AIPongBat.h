@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Pong/BasePongBat.h"
+#include "BasePongBat.h"
 #include "AIPongBat.generated.h"
 
 /**
@@ -13,5 +13,13 @@ UCLASS()
 class BIGMOND_GAMES_API AAIPongBat : public ABasePongBat
 {
 	GENERATED_BODY()
-	
+
+private:
+	UPROPERTY(VisibleAnywhere, Category= "ReferencedActors")
+	class AActor* TheBall;
+
+public:
+	virtual void BeginPlay() override;
+	void MoveToBall();
+	virtual void Tick(float DeltaTime) override;
 };
