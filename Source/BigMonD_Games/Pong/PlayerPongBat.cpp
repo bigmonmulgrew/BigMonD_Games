@@ -1,9 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright 100705789
 
 
 #include "PlayerPongBat.h"
-
-#include "Math/UnitConversion.h"
 
 void APlayerPongBat::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {

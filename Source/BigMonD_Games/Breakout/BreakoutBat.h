@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BasePongBat.h"
-#include "PlayerPongBat.generated.h"
+#include "BigMonD_Games/Pong/BasePongBat.h"
+#include "BreakoutBat.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BIGMOND_GAMES_API APlayerPongBat : public ABasePongBat
+class BIGMOND_GAMES_API ABreakoutBat : public ABasePongBat
 {
 	GENERATED_BODY()
 

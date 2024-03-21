@@ -16,15 +16,16 @@ ABasePongBat::ABasePongBat()
 
 	MyCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Ball Hit Box"));
 	MyCollider->SetCollisionEnabled((ECollisionEnabled::QueryOnly));
-	MyCollider->SetBoxExtent(FVector(32, 32,32)); // More evil magic numbers
+	//MyCollider->SetBoxExtent(FVector(32, 32,32)); // More evil magic numbers
+	MyCollider->SetBoxExtent(MySprite->Bounds.GetBox().GetSize() / 2);
 	MyCollider->SetupAttachment(RootComponent);
+	
 }
 
 // Called when the game starts or when spawned
 void ABasePongBat::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
