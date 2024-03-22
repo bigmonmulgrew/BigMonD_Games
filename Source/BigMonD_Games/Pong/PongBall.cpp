@@ -66,7 +66,7 @@ void APongBall::OnCollision(UPrimitiveComponent* OverlappedComponent,
 							int32 OtherBodyIndex, bool bFromSweep,
 							const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("I hit something!"));
+	UE_LOG(LogTemp, Warning, TEXT("Pong ball: I hit something!"));
 
 	MyVelocity.X = -MyVelocity.X; // TODO this is a lazy way to do the collision direction change.
 }

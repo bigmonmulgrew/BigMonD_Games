@@ -1,6 +1,7 @@
 #include "BreakoutBall.h"
 
 #include "BreakoutBat.h"
+#include "BreakoutBrick.h"
 #include "PaperSpriteComponent.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
@@ -79,13 +80,14 @@ void ABreakoutBall::OnCollision(UPrimitiveComponent* OverlappedComponent,
 							int32 OtherBodyIndex, bool bFromSweep,
 							const FHitResult& SweepResult)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Breakout Ball: I hit something"));
 	if(OtherActor->IsA(ABreakoutBat::StaticClass()))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("I HIT THE BAT"));
 		FVector BatPosition = GetActorLocation();
 		MyVelocity.Z = BallSpeed;
 	}
-	else if(OtherActor->IsA(ABreakoutBat::StaticClass()))
+	else if(OtherActor->IsA(ABreakoutBrick::StaticClass()))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("I HIT A BRICK"));
 
