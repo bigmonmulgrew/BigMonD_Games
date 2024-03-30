@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BasePongBat.h"
+#include "BigMonD_Games/Pong/BasePongBat.h"
 #include "PlayerPongBat.generated.h"
 
 /**

@@ -31,10 +31,10 @@ void ALevelManager::LoadLevel(const float LevelNo)
 		UGameplayStatics::OpenLevel(this, "L_Pong");
 		break;
 	case 2:
-		UE_LOG(LogTemp, Warning, TEXT("Level not implemented"));
+		UGameplayStatics::OpenLevel(this, "L_Breakout");
 		break;
 	case 3:
-		UE_LOG(LogTemp, Warning, TEXT("Level not implemented"));
+		UE_LOG(LogTemp, Warning , TEXT("Level not implemented"));
 		break;
 	case 4:
 		UE_LOG(LogTemp, Warning, TEXT("Level not implemented"));

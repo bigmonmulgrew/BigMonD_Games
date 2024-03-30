@@ -15,28 +15,24 @@ ABreakoutBall::ABreakoutBall()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	MySprite = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("My Image"));
-	RootComponent = MySprite;
-
-	
+	RootComponent = MySprite;	
 	
 	MyCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Ball Hit Box"));
 	MyCollider->SetCollisionEnabled((ECollisionEnabled::QueryOnly));
 	MyCollider->SetupAttachment(RootComponent);
 	
 	MyCollider->OnComponentBeginOverlap.AddDynamic(this, &ABreakoutBall::OnCollision);
-
 	
 }
 
 void ABreakoutBall::SetupPlayField()
 {
-	// Evil magic numbers.
+	
 	AActor* GameCamera = UGameplayStatics::GetActorOfClass(GetWorld(), ACameraActor::StaticClass());
 	const UCameraComponent* GameCameraComponent = Cast<ACameraActor>(GameCamera)->GetCameraComponent();
 	
 	HalfPlayFieldHeight = (GameCameraComponent->OrthoWidth / GameCameraComponent->AspectRatio) / 2;
 	HalfPlayFieldWidth  = (GameCameraComponent->OrthoWidth / 2);
-
 	
 }
 

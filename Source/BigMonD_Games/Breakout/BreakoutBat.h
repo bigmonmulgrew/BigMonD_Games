@@ -17,4 +17,5 @@ class BIGMOND_GAMES_API ABreakoutBat : public ABasePongBat
 public:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	void MovePlayer(float input);
+
 };
