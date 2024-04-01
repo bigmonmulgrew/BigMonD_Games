@@ -14,7 +14,7 @@ void ABreakoutBat::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void ABreakoutBat::MovePlayer(float input)
 {
-	if(input != 0) UE_LOG(LogTemp, Warning, TEXT("Button Pressedm %f"), input);
+	//if(input != 0) UE_LOG(LogTemp, Warning, TEXT("Button Pressedm %f"), input);
 	SetActorLocation(GetActorLocation() + FVector(1 * input,0,0));
 }
 

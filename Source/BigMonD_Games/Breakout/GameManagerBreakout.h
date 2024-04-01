@@ -13,5 +13,8 @@ UCLASS()
 class BIGMOND_GAMES_API AGameManagerBreakout : public AGameManager
 {
 	GENERATED_BODY()
-	
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Settings");
+	int Lives = 3;
+	void GameOver();
 };

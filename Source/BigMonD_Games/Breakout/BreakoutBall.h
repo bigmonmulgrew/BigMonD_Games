@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameManagerBreakout.h"
 #include "GameFramework/Actor.h"
 #include "PaperSpriteComponent.h"
 #include "BreakoutBall.generated.h"
@@ -36,10 +37,15 @@ public:
 	
 private:
 	FVector MyVelocity;
+	FVector StartingPosition;
 	float HalfPlayFieldHeight;
 	float HalfPlayFieldWidth;
 	float BallHalfWidth;
+	bool Respawning = false;
+	AGameManagerBreakout* GameManager;
 	void ChangeDirection(FVector* MyUpdatedLocaiton);
+	void RespawnBall();
+	void LoseBall();
 	void HitBrick(AActor* OtherActor);
 	void HitBat();
 	//void OnCollision();

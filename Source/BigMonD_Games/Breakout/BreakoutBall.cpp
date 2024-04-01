@@ -45,10 +45,14 @@ void ABreakoutBall::BeginPlay()
 	BallHalfWidth = MySprite->Bounds.GetBox().GetSize().X / 2;
 	
 	MyVelocity = FVector(BallSpeed, 0, BallSpeed);
-
+	StartingPosition = GetActorLocation();
+	
 	SetupPlayField();
 	
 	MyCollider->SetBoxExtent(FVector(BallHalfWidth, BallHalfWidth,BallHalfWidth));
+
+	//find the game manager
+	GameManager = Cast<AGameManagerBreakout>(UGameplayStatics::GetActorOfClass(GetWorld(),AGameManagerBreakout::StaticClass()));
 }
 
 // Called every frame
@@ -60,20 +64,43 @@ void ABreakoutBall::Tick(float DeltaTime)
 	FVector MyUpdatedLocation = (GetActorLocation() + DeltaVector);
 
 	ChangeDirection(&MyUpdatedLocation);
-	SetActorLocation(MyUpdatedLocation);
+	if(!Respawning)	SetActorLocation(MyUpdatedLocation);
+	else
+	{
+		SetActorLocation(StartingPosition);
+		Respawning = false;
+	}
 }
 
 void ABreakoutBall::ChangeDirection(FVector* MyUpdatedLocaiton)
 {
-	if     (MyUpdatedLocaiton->Z + BallHalfWidth >  HalfPlayFieldHeight) MyVelocity.Z = -BallSpeed; // Magic number bad
-	else if(MyUpdatedLocaiton->Z - BallHalfWidth < -HalfPlayFieldHeight) MyVelocity.Z =  BallSpeed; // Magic number bad
-	else if(MyUpdatedLocaiton->X + BallHalfWidth >  HalfPlayFieldWidth)	 MyVelocity.X = -BallSpeed; // Magic number bad
-	else if(MyUpdatedLocaiton->X - BallHalfWidth < -HalfPlayFieldWidth)	 MyVelocity.X =  BallSpeed; // Magic number bad
+	if     (MyUpdatedLocaiton->Z + BallHalfWidth >  HalfPlayFieldHeight) MyVelocity.Z = -BallSpeed; 
+	else if(MyUpdatedLocaiton->Z				 < -HalfPlayFieldHeight) LoseBall(); 
+	else if(MyUpdatedLocaiton->X + BallHalfWidth >  HalfPlayFieldWidth)	 MyVelocity.X = -BallSpeed; 
+	else if(MyUpdatedLocaiton->X - BallHalfWidth < -HalfPlayFieldWidth)	 MyVelocity.X =  BallSpeed; 
+}
+
+void ABreakoutBall::LoseBall()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Lives: %i"), GameManager->Lives);
+	if(GameManager->Lives <= 0)
+	{
+		GameManager->GameOver();
+		this->Destroy();
+	}
+	else RespawnBall();
+}
+
+void ABreakoutBall::RespawnBall()
+{
+	GameManager->Lives--;
+	if(MyVelocity.Z < 0) MyVelocity.Z *= -1;
+	Respawning = true;
 }
 
 void ABreakoutBall::HitBrick(AActor* OtherActor)
 {
-	UE_LOG(LogTemp, Warning, TEXT("I HIT A BRICK"));
+	//UE_LOG(LogTemp, Warning, TEXT("I HIT A BRICK"));
 
 	//Deflect The Ball
 	FVector HitDirection = GetActorLocation() - OtherActor->GetActorLocation();
@@ -95,7 +122,7 @@ void ABreakoutBall::HitBrick(AActor* OtherActor)
 
 void ABreakoutBall::HitBat()
 {
-	UE_LOG(LogTemp, Warning, TEXT("I HIT THE BAT"));
+	//UE_LOG(LogTemp, Warning, TEXT("I HIT THE BAT"));
 	FVector BatPosition = GetActorLocation();
 	MyVelocity.Z = BallSpeed;
 }
@@ -108,6 +135,4 @@ void ABreakoutBall::OnCollision(UPrimitiveComponent* OverlappedComponent,
 	UE_LOG(LogTemp, Warning, TEXT("Breakout Ball: I hit something"));
 	if     (OtherActor->IsA(ABreakoutBat::StaticClass()))		HitBat();
 	else if(OtherActor->IsA(ABreakoutBrick::StaticClass()))	HitBrick(OtherActor);
-	
-	
 }
