@@ -20,6 +20,7 @@ void AAIPongBat::Tick(float DeltaTime)
 }
 void AAIPongBat::MoveToBall()
 {
+	if(TheBall == nullptr) return;		//Prevent an error when the ball has been deleted when a player wins.
 	if (GetActorLocation().Z > TheBall->GetActorLocation().Z)
 	{
 		SetActorLocation(GetActorLocation() + FVector(0,0,-1));

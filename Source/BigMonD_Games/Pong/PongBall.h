@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "PaperSpriteComponent.h"
+#include "BigMonD_Games/Pong/GameManagerPong.h"
 #include "PongBall.generated.h"
 
 UCLASS()
@@ -28,6 +29,11 @@ protected:
 	class UPaperSpriteComponent* MySprite;
 	UPROPERTY(VisibleAnywhere, Category = "Sprites");
 	class UBoxComponent* MyCollider;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Settings");
+	float BallSpeed = 300;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Settings");
+	float EdgeBuffer = 8;   //Amount to reduce teh top and bottom playfield edge by to correspond to image
+	AGameManagerPong* GameManagerPong;
 
 public:	
 	// Called every frame
@@ -37,6 +43,9 @@ private:
 	FVector MyVelocity;
 	float HalfPlayFieldHeight;
 	float HalfPlayFieldWidth;
-	void ChangeDirection(FVector* MyUpdatedLocaiton);
+	float BallHalfWidth;
+	bool Scored = false;
+	void ChangeDirection(const FVector* MyUpdatedLocation);
+	void GainScore(int player);
 	//void OnCollision();
 };

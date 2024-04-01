@@ -2,8 +2,13 @@
 
 
 #include "PongBall.h"
+
+#include "GameManagerPong.h"
 #include "PaperSpriteComponent.h"
+#include "Camera/CameraActor.h"
 #include "Components/BoxComponent.h"
+#include "Camera/CameraComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APongBall::APongBall()
@@ -28,11 +33,18 @@ void APongBall::BeginPlay()
 {
 	Super::BeginPlay();
 
-	MyVelocity = FVector(300, 0, 300);
-
-	// Evil magic numbers.
-	HalfPlayFieldHeight = (2048 / 1.777) / 2;
-	HalfPlayFieldWidth = (2048 / 2);
+	//find the game manager
+	GameManagerPong = Cast<AGameManagerPong>(UGameplayStatics::GetActorOfClass(GetWorld(),AGameManagerPong::StaticClass()));
+	
+	// Calculate the ball width from the sprite
+	BallHalfWidth = MySprite->Bounds.GetBox().GetSize().X / 2;
+	MyVelocity = FVector(BallSpeed, 0, BallSpeed);
+	
+	AActor* GameCamera = UGameplayStatics::GetActorOfClass(GetWorld(), ACameraActor::StaticClass());
+	const UCameraComponent* GameCameraComponent = Cast<ACameraActor>(GameCamera)->GetCameraComponent();
+	
+	HalfPlayFieldHeight = (GameCameraComponent->OrthoWidth / GameCameraComponent->AspectRatio) / 2;
+	HalfPlayFieldWidth  = (GameCameraComponent->OrthoWidth / 2);
 	
 }
 
@@ -40,25 +52,35 @@ void APongBall::BeginPlay()
 void APongBall::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	
 	
 	const FVector DeltaVector = MyVelocity * DeltaTime;
 	FVector MyUpdatedLocation = (GetActorLocation() + DeltaVector);
 
 	ChangeDirection(&MyUpdatedLocation);
 	
-	SetActorLocation(MyUpdatedLocation);
+	if(!Scored)	SetActorLocation(MyUpdatedLocation);
+	else
+	{
+		SetActorLocation(FVector::Zero());
+		Scored = false;
+	}
 
 	
 }
 
-void APongBall::ChangeDirection(FVector* MyUpdatedLocaiton)
+void APongBall::ChangeDirection(const FVector* MyUpdatedLocation)
 {
-	if     (MyUpdatedLocaiton->Z >  HalfPlayFieldHeight) MyVelocity.Z = -300; // Magic number bad
-	else if(MyUpdatedLocaiton->Z < -HalfPlayFieldHeight) MyVelocity.Z =  300; // Magic number bad
-	else if(MyUpdatedLocaiton->X >  HalfPlayFieldWidth)	 MyVelocity.X = -300; // Magic number bad
-	else if(MyUpdatedLocaiton->X < -HalfPlayFieldWidth)	 MyVelocity.X =  300; // Magic number bad
+	const float VerticalLimit = HalfPlayFieldHeight - EdgeBuffer;
+	if     (MyUpdatedLocation->Z + BallHalfWidth >  VerticalLimit)		MyVelocity.Z = -BallSpeed; // Magic number bad
+	else if(MyUpdatedLocation->Z - BallHalfWidth < -VerticalLimit)		MyVelocity.Z =  BallSpeed; // Magic number bad
+	else if(MyUpdatedLocation->X + BallHalfWidth >  HalfPlayFieldWidth)	GainScore(0); 
+	else if(MyUpdatedLocation->X - BallHalfWidth < -HalfPlayFieldWidth)	GainScore(1); 
+}
+
+void APongBall::GainScore(int player)
+{
+	Scored = true;
+	GameManagerPong->IncreaseScore(player);
 }
 
 void APongBall::OnCollision(UPrimitiveComponent* OverlappedComponent,
@@ -66,7 +88,5 @@ void APongBall::OnCollision(UPrimitiveComponent* OverlappedComponent,
 							int32 OtherBodyIndex, bool bFromSweep,
 							const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Pong ball: I hit something!"));
-
 	MyVelocity.X = -MyVelocity.X; // TODO this is a lazy way to do the collision direction change.
 }
