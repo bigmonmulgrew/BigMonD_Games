@@ -17,6 +17,9 @@ From the title screen press the number line buttons to select a level. You can d
 9. Unused
 0. Return to title Screen
 
-#  1 Pong
+# 1 Pong
 This is classsic pong. Game plays first to 3 scores, winner will be announced and then after a short delay will return to the title screen
 There is a GameManager in the outliner with a setting for the MaxScore 
+
+# 2 Breakout
+This is classic Breakout, you have 3 extra lives, lose the 4th ball and you lose.
