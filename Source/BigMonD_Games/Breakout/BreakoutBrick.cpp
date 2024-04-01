@@ -18,13 +18,11 @@ ABreakoutBrick::ABreakoutBrick()
 void ABreakoutBrick::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void ABreakoutBrick::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 

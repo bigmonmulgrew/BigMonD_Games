@@ -40,5 +40,7 @@ private:
 	float HalfPlayFieldWidth;
 	float BallHalfWidth;
 	void ChangeDirection(FVector* MyUpdatedLocaiton);
+	void HitBrick(AActor* OtherActor);
+	void HitBat();
 	//void OnCollision();
 };
