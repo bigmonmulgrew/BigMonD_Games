@@ -17,6 +17,7 @@ void ALevelManager::BeginPlay()
         
 		// Bind the axis to the LoadLevel function
 		InputComponent->BindAxis("LoadLevel", this, &ALevelManager::LoadLevel);
+		
 	}
 }
 

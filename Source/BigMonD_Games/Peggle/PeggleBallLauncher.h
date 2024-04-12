@@ -21,6 +21,7 @@ class BIGMOND_GAMES_API APeggleBallLauncher : public APawn
 	class UPaperSpriteComponent* MySprite;
 	UPROPERTY(EditAnywhere, Category = "Ammo")
 	TSubclassOf<AActor> Ball;
+	UPROPERTY(EditAnywhere, Category = "Ammo")
 	float ShotPower = 2000.0;
 	
 protected:
