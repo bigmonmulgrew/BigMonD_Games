@@ -48,4 +48,5 @@ private:
 	void ChangeDirection(const FVector* MyUpdatedLocation);
 	void GainScore(int player);
 	//void OnCollision();
+	void NormalizeBallVelocity(FVector& MyVelocity);
 };

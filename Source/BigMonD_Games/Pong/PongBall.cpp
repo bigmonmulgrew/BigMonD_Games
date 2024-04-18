@@ -3,6 +3,7 @@
 
 #include "PongBall.h"
 
+#include "BasePongBat.h"
 #include "GameManagerPong.h"
 #include "PaperSpriteComponent.h"
 #include "Camera/CameraActor.h"
@@ -39,6 +40,7 @@ void APongBall::BeginPlay()
 	// Calculate the ball width from the sprite
 	BallHalfWidth = MySprite->Bounds.GetBox().GetSize().X / 2;
 	MyVelocity = FVector(BallSpeed, 0, BallSpeed);
+	NormalizeBallVelocity(MyVelocity);
 	
 	AActor* GameCamera = UGameplayStatics::GetActorOfClass(GetWorld(), ACameraActor::StaticClass());
 	const UCameraComponent* GameCameraComponent = Cast<ACameraActor>(GameCamera)->GetCameraComponent();
@@ -83,10 +85,38 @@ void APongBall::GainScore(int player)
 	GameManagerPong->IncreaseScore(player);
 }
 
-void APongBall::OnCollision(UPrimitiveComponent* OverlappedComponent,
-							AActor* OtherActor, UPrimitiveComponent* OtherComp,
-							int32 OtherBodyIndex, bool bFromSweep,
-							const FHitResult& SweepResult)
+void APongBall::NormalizeBallVelocity(FVector& VelToNormalize)
 {
-	MyVelocity.X = -MyVelocity.X; // TODO this is a lazy way to do the collision direction change.
+	VelToNormalize.Normalize();
+	VelToNormalize = VelToNormalize * BallSpeed;
+}
+
+void APongBall::OnCollision(UPrimitiveComponent* OverlappedComponent,
+                            AActor* OtherActor, UPrimitiveComponent* OtherComp,
+                            int32 OtherBodyIndex, bool bFromSweep,
+                            const FHitResult& SweepResult)
+{
+	
+	ABasePongBat* bat = Cast<ABasePongBat>(OtherActor);
+	
+	if(bat)
+	{
+		// Get the center of the bat
+		FVector BatCenter = bat->GetActorLocation();
+		// Get the extent of the bat (half the height in Z direction)
+		FVector BatExtent = MySprite->Bounds.GetBox().GetExtent();
+		// Get the impoact point fo the ball
+		FVector BallImpactPoint = GetActorLocation();
+
+		// Calculate the relative position of the hit point from the bat's center
+		float RelativePosition = (BallImpactPoint.Z - BatCenter.Z) / BatExtent.Z;
+
+		// Clamp the value between -1 and 1 just in case of any floating point imprecision
+		RelativePosition = FMath::Clamp(RelativePosition, -1.0f, 1.0f);
+		
+		MyVelocity.X = -MyVelocity.X; // TODO this is a lazy way to do the collision direction change.
+		MyVelocity.Z = (MyVelocity.Z + BallSpeed * RelativePosition) /2;
+		NormalizeBallVelocity(MyVelocity);
+	}
+	 
 }
