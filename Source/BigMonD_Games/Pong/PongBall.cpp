@@ -10,6 +10,7 @@
 #include "Components/BoxComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Math/UnrealMathUtility.h" // Include this for FMath
 
 // Sets default values
 APongBall::APongBall()
@@ -91,32 +92,45 @@ void APongBall::NormalizeBallVelocity(FVector& VelToNormalize)
 	VelToNormalize = VelToNormalize * BallSpeed;
 }
 
+float APongBall::GetRelativePosition(ABasePongBat* bat)
+{
+	float RelativePosition = 0;
+	
+	// Get the center of the bat
+	FVector BatCenter = bat->GetActorLocation();
+	// Get the extent of the bat (half the height in Z direction)
+	FVector BatExtent = bat->GetSprite()->Bounds.GetBox().GetExtent(); 
+	// Get the impact point fo the ball
+	FVector BallImpactPoint = GetActorLocation();
+
+	RelativePosition = (BallImpactPoint.Z - BatCenter.Z) / (BatExtent.Z);
+
+	UE_LOG(LogTemp, Warning, TEXT("%f"), RelativePosition);
+	
+	return RelativePosition;
+}
+
+
 void APongBall::OnCollision(UPrimitiveComponent* OverlappedComponent,
                             AActor* OtherActor, UPrimitiveComponent* OtherComp,
                             int32 OtherBodyIndex, bool bFromSweep,
                             const FHitResult& SweepResult)
 {
-	
-	ABasePongBat* bat = Cast<ABasePongBat>(OtherActor);
-	
-	if(bat)
+	if(ABasePongBat* bat = Cast<ABasePongBat>(OtherActor))
 	{
-		// Get the center of the bat
-		FVector BatCenter = bat->GetActorLocation();
-		// Get the extent of the bat (half the height in Z direction)
-		FVector BatExtent = MySprite->Bounds.GetBox().GetExtent();
-		// Get the impoact point fo the ball
-		FVector BallImpactPoint = GetActorLocation();
-
-		// Calculate the relative position of the hit point from the bat's center
-		float RelativePosition = (BallImpactPoint.Z - BatCenter.Z) / BatExtent.Z;
-
-		// Clamp the value between -1 and 1 just in case of any floating point imprecision
-		RelativePosition = FMath::Clamp(RelativePosition, -1.0f, 1.0f);
 		
-		MyVelocity.X = -MyVelocity.X; // TODO this is a lazy way to do the collision direction change.
-		MyVelocity.Z = (MyVelocity.Z + BallSpeed * RelativePosition) /2;
-		NormalizeBallVelocity(MyVelocity);
+		float RelativePosition = GetRelativePosition(bat); 
+		
+		// When between -0.3 and 0.3 skip z axis modifier
+		if(RelativePosition > 0.3 || RelativePosition < -0.3)
+		{
+			const float DeflectionMagnitude = BallSpeed * RelativePosition;
+			MyVelocity.Z = MyVelocity.Z + DeflectionMagnitude;
+		}
+		
+		MyVelocity.X = -MyVelocity.X; // Reflect X velocity when in center of paddle
+		
+		NormalizeBallVelocity(MyVelocity); // Ensures the ball speed is consistent after a direction change.
 	}
 	 
 }
