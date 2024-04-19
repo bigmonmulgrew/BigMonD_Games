@@ -12,5 +12,5 @@ void APlayerPongBat::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void APlayerPongBat::MovePlayer(float input)
 {
-	SetActorLocation(GetActorLocation() + FVector(0,0,1 * input));
+	SetActorLocation(GetActorLocation() + FVector(0,0,input * PaddleSpeed * DT));
 }

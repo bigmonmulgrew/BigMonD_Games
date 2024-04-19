@@ -22,6 +22,8 @@ protected:
 	class UPaperSpriteComponent* MySprite;
 	UPROPERTY(VisibleAnywhere, Category = "Sprites");
 	class UBoxComponent* MyCollider;
+	UPROPERTY(EditAnywhere, Category= "Game Tuning")
+	float PaddleSpeed = 500;
 
 public:	
 	// Called every frame
@@ -29,5 +31,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	//Store deltaTime so it can easily be accessed by other methods. 
+	float DT;	
 
 };

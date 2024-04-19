@@ -17,9 +17,11 @@ class BIGMOND_GAMES_API AAIPongBat : public ABasePongBat
 private:
 	UPROPERTY(VisibleAnywhere, Category= "ReferencedActors")
 	class AActor* TheBall;
+	UPROPERTY(EditAnywhere, Category= "Game Tuning")
+	float AISpeedBonus = 0;
 
 public:
 	virtual void BeginPlay() override;
-	void MoveToBall();
+	void MoveToBall(float DeltaTime);
 	virtual void Tick(float DeltaTime) override;
 };

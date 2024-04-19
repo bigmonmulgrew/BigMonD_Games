@@ -32,6 +32,7 @@ void ABasePongBat::BeginPlay()
 void ABasePongBat::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	DT = DeltaTime;
 
 }
 
