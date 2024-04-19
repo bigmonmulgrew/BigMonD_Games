@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BasePongBat.h"
 #include "GameFramework/Actor.h"
 #include "PaperSpriteComponent.h"
 #include "BigMonD_Games/Pong/GameManagerPong.h"
@@ -49,4 +50,5 @@ private:
 	void GainScore(int player);
 	//void OnCollision();
 	void NormalizeBallVelocity(FVector& MyVelocity);
+	float GetRelativePosition(ABasePongBat* bat);
 };

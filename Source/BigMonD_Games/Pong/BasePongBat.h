@@ -33,6 +33,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	//Store deltaTime so it can easily be accessed by other methods. 
-	float DT;	
+	float DT;
+
+	UPaperSpriteComponent* GetSprite();
 
 };

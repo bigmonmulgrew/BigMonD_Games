@@ -43,3 +43,8 @@ void ABasePongBat::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 }
 
+UPaperSpriteComponent* ABasePongBat::GetSprite()
+{
+	return MySprite;
+}
+
