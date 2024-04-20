@@ -14,7 +14,22 @@ class BIGMOND_GAMES_API AMario : public APawn
 public:
 	// Sets default values for this pawn's properties
 	AMario();
+	UPROPERTY(VisibleAnywhere, Category = "Sprites")
+	class UPaperSpriteComponent* MySprite;
+	UPROPERTY(VisibleAnywhere, Category = "Collider")
+	class UCapsuleComponent* MyBodyCollider;
+	UPROPERTY(VisibleAnywhere, Category = "Camera Setup")
+	class USpringArmComponent* MySpringArm;
+	UPROPERTY(VisibleAnywhere, Category = "Camera Setup")
+	class UCameraComponent* MyCamera;
 
+	UPROPERTY(EditAnywhere, Category = "Player Properties")
+	float JumpForce = 1000; 
+	UPROPERTY(EditAnywhere, Category = "Player Properties")
+	float PlayerAcceleration = 1000;
+	UPROPERTY(EditAnywhere, Category = "Player Properties")
+	float PlayerMaxSpeed = 32;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -25,5 +40,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+private:
+	void MovePlayerHorizontal(float value);
+	void Jump();
 
 };

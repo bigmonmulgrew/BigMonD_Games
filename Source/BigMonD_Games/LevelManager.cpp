@@ -35,10 +35,10 @@ void ALevelManager::LoadLevel(const float LevelNo)
 		UGameplayStatics::OpenLevel(this, "L_Breakout");
 		break;
 	case 3:
-		UE_LOG(LogTemp, Warning , TEXT("Level not implemented"));
+		UGameplayStatics::OpenLevel(this, "L_Peggle");
 		break;
 	case 4:
-		UE_LOG(LogTemp, Warning, TEXT("Level not implemented"));
+		UGameplayStatics::OpenLevel(this, "L_Mario_1");
 		break;
 	case 5:
 		UE_LOG(LogTemp, Warning, TEXT("Level not implemented"));
