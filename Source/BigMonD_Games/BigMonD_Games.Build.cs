@@ -8,7 +8,7 @@ public class BigMonD_Games : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Paper2D"  });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "Paper2D" });
 

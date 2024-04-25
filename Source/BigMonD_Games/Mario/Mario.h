@@ -6,16 +6,28 @@
 #include "GameFramework/Pawn.h"
 #include "Mario.generated.h"
 
+UENUM()
+enum class MarioAnimationState : uint8
+{
+	AS_WALKING_RIGHT,
+	AS_WALKING_LEFT,
+	AS_IDLE,
+	AS_ATTACK,
+	AS_JUMP,
+	AS_EMPTY
+};
+
 UCLASS()
 class BIGMOND_GAMES_API AMario : public APawn
 {
 	GENERATED_BODY()
 
 public:
+	
 	// Sets default values for this pawn's properties
 	AMario();
 	UPROPERTY(VisibleAnywhere, Category = "Sprites")
-	class UPaperSpriteComponent* MySprite;
+	class UPaperFlipbookComponent* MySprite;
 	UPROPERTY(VisibleAnywhere, Category = "Collider")
 	class UCapsuleComponent* MyBodyCollider;
 	UPROPERTY(VisibleAnywhere, Category = "Camera Setup")
@@ -28,13 +40,27 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Player Properties")
 	float PlayerAcceleration = 1000;
 	UPROPERTY(EditAnywhere, Category = "Player Properties")
-	float PlayerMaxSpeed = 32;
+	float PlayerMaxSpeed = 100;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")
+	class UPaperFlipbook* Flipbook_WalkingRight;
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")
+	class UPaperFlipbook* Flipbook_Idle;
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")
+	class UPaperFlipbook* Flipbook_Jump;
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")
+	class UPaperFlipbook* Flipbook_Attack;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Animaitons")
+	MarioAnimationState CurrentAnimaitonState;
+	UPROPERTY(VisibleAnywhere, Category = "Animaitons")
+	MarioAnimationState OldAnimationState;
 	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -42,7 +68,12 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	bool bIsJumping;
 	void MovePlayerHorizontal(float value);
 	void Jump();
-
+	void ConstructorSetupPhysics();
+	void ConstructorSetupComponents();
+	void IdentifyAnimStates();
+	void ProcessAnimStateMachine();
+	void OnCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };
