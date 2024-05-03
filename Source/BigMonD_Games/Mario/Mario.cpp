@@ -90,9 +90,12 @@ void AMario::Tick(float DeltaTime)
 
 void AMario::IdentifyAnimStates()
 {
+	
 	// Set old animation state, used to identify changes
 	OldAnimationState = CurrentAnimaitonState;
-
+	
+	if(bIsJumping) return;
+	
 	float Currentspeed = MyBodyCollider->GetPhysicsLinearVelocity().X;
 
 	if		(Currentspeed > 1)  CurrentAnimaitonState = MarioAnimationState::AS_WALKING_RIGHT;
@@ -117,14 +120,21 @@ void AMario::ProcessAnimStateMachine()
 		}
 	case MarioAnimationState::AS_WALKING_RIGHT:
 		{
-			MySprite->SetFlipbook(Flipbook_WalkingRight);
+			UPaperFlipbook* TargetBook = !bIsJumping ? Flipbook_WalkingRight : Flipbook_Jump;
+			MySprite->SetFlipbook(TargetBook);
 			MySprite->SetRelativeRotation(FRotator(0,0,0));
 			break;
 		}
 	case MarioAnimationState::AS_WALKING_LEFT:
 		{
-			MySprite->SetFlipbook(Flipbook_WalkingRight);
+			UPaperFlipbook* TargetBook = !bIsJumping ? Flipbook_WalkingRight : Flipbook_Jump;
+			MySprite->SetFlipbook(TargetBook);
 			MySprite->SetRelativeRotation(FRotator(0,180,0));
+			break;
+		}
+	case MarioAnimationState::AS_JUMP:
+		{
+			MySprite->SetFlipbook(Flipbook_Jump);
 			break;
 		}
 	}
@@ -149,6 +159,8 @@ void AMario::Jump()
 	{
 		MyBodyCollider->AddImpulse(FVector(0,0,1) * JumpForce);
 		bIsJumping = true;
+		CurrentAnimaitonState = MarioAnimationState::AS_JUMP;
+		ProcessAnimStateMachine();
 	}
 	
 }
@@ -156,6 +168,10 @@ void AMario::Jump()
 void AMario::OnCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hit somehting"));
-	if(OtherActor->Tags.Contains("Floor")) bIsJumping = false;
+	
+	if(OtherActor->Tags.Contains("Floor"))
+	{
+		bIsJumping = false;
+		CurrentAnimaitonState = MarioAnimationState::AS_IDLE;
+	}
 }
