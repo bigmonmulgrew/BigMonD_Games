@@ -40,6 +40,12 @@ void AMario::ConstructorSetupPhysics()
 
 	// After making changes to BodyInstance, we need to update the physics state.
 	MyBodyCollider->UpdateBodySetup();
+
+	// Enable collisions
+	MyBodyCollider->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	MyBodyCollider->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block); // or ECR_Overlap
+	MyBodyCollider->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+	MyBodyCollider->OnComponentHit.AddDynamic(this, &AMario::OnCollision);
 }
 // Sets default values
 AMario::AMario()
@@ -54,14 +60,16 @@ AMario::AMario()
 	MySpringArm->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 	
 	ConstructorSetupPhysics();
-
+	
 }
 
 // Called when the game starts or when spawned
 void AMario::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
+	
+	
 	CurrentAnimaitonState = MarioAnimationState::AS_IDLE;
 	OldAnimationState = MarioAnimationState::AS_EMPTY;
 	ProcessAnimStateMachine();
@@ -140,7 +148,7 @@ void AMario::Jump()
 	if(!bIsJumping)
 	{
 		MyBodyCollider->AddImpulse(FVector(0,0,1) * JumpForce);
-		bIsJumping;
+		bIsJumping = true;
 	}
 	
 }
@@ -148,5 +156,6 @@ void AMario::Jump()
 void AMario::OnCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Hit somehting"));
 	if(OtherActor->Tags.Contains("Floor")) bIsJumping = false;
 }
