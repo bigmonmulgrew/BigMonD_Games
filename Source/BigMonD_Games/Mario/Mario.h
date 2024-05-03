@@ -14,6 +14,7 @@ enum class MarioAnimationState : uint8
 	AS_IDLE,
 	AS_ATTACK,
 	AS_JUMP,
+	AS_DIE,
 	AS_EMPTY
 };
 
@@ -50,6 +51,8 @@ public:
 	class UPaperFlipbook* Flipbook_Jump;
 	UPROPERTY(EditDefaultsOnly, Category = "Animations")
 	class UPaperFlipbook* Flipbook_Attack;
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")
+	class UPaperFlipbook* Flipbook_Die;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Animaitons")
 	MarioAnimationState CurrentAnimaitonState;
@@ -68,15 +71,20 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	// Kill Mario
+	void KillMario(); 
 	
 
 private:
 	bool bIsJumping;
+	bool bIsAlive = true;
 	void MovePlayerHorizontal(float value);
 	void Jump();
 	void ConstructorSetupPhysics();
 	void ConstructorSetupComponents();
 	void IdentifyAnimStates();
 	void ProcessAnimStateMachine();
-	
+	FTimerHandle TimerHandle_DestroyActor;
+	void DestroyWithDelay(float Delay);
 };

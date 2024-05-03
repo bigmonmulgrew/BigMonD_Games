@@ -80,6 +80,9 @@ void AMario::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Exit early if dead
+	if(!bIsAlive) return;
+	
 	FVector ClampedSpeed = MyBodyCollider->GetPhysicsLinearVelocity();
 	ClampedSpeed.X = FMath::Clamp(ClampedSpeed.X, -PlayerMaxSpeed, PlayerMaxSpeed);
 	MyBodyCollider->SetPhysicsLinearVelocity(ClampedSpeed);
@@ -139,6 +142,9 @@ void AMario::ProcessAnimStateMachine()
 		}
 	}
 }
+
+
+
 // Called to bind functionality to input
 void AMario::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -148,6 +154,35 @@ void AMario::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+void AMario::KillMario()
+{
+	// Exit early if dead
+	if(!bIsAlive) return;
+
+	// Track state so we dont try to kill again.
+	bIsAlive = false;
+
+	//Set the animation state
+	CurrentAnimaitonState = MarioAnimationState::AS_DIE;
+	ProcessAnimStateMachine();
+
+	//Destroy Mario after a delay
+	DestroyWithDelay(Flipbook_Die->GetTotalDuration());
+}
+
+void AMario::DestroyWithDelay(float Delay)
+{
+	GetWorld()->GetTimerManager().SetTimerForNextTick([this, Delay]()
+	{
+		GetWorld()->GetTimerManager().SetTimer(
+			TimerHandle_DestroyActor, 
+			[this]() { Destroy(); }, 
+			Delay, 
+			false
+		);
+	});
+}
+
 void AMario::MovePlayerHorizontal(float value)
 {
 	MyBodyCollider->AddForce(FVector(1,0,0) * value * PlayerAcceleration, NAME_None, true );
@@ -155,6 +190,9 @@ void AMario::MovePlayerHorizontal(float value)
 
 void AMario::Jump()
 {
+	// Exit early if dead
+	if(!bIsAlive) return;
+	
 	if(!bIsJumping)
 	{
 		MyBodyCollider->AddImpulse(FVector(0,0,1) * JumpForce);
@@ -168,6 +206,8 @@ void AMario::Jump()
 void AMario::OnCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
+	// Exit early if dead
+	if(!bIsAlive) return;
 	
 	if(OtherActor->Tags.Contains("Floor"))
 	{

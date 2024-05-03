@@ -3,6 +3,7 @@
 
 #include "BaseEnemy.h"
 
+#include "Mario.h"
 #include "PaperFlipbookComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components//CapsuleComponent.h"
@@ -33,6 +34,15 @@ void ABaseEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void ABaseEnemy::OnCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	FVector NormalImpulse, const FHitResult& Hit)
+{
+	if(OtherActor->IsA(AMario::StaticClass()))
+	{
+		Cast<AMario>(OtherActor)->KillMario();
+	}
 }
 
 // Called every frame
