@@ -74,7 +74,8 @@ public:
 
 	// Kill Mario
 	void KillMario(); 
-	
+
+	bool IsAlive() {return bIsAlive; };
 
 private:
 	bool bIsJumping;
@@ -85,6 +86,8 @@ private:
 	void ConstructorSetupComponents();
 	void IdentifyAnimStates();
 	void ProcessAnimStateMachine();
+	void SetAnimState(UPaperFlipbook* TargetFlipBook, FRotator TargetRotation = FRotator(0,0,0));
+	
 	FTimerHandle TimerHandle_DestroyActor;
 	void DestroyWithDelay(float Delay);
 };

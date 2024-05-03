@@ -66,9 +66,7 @@ AMario::AMario()
 // Called when the game starts or when spawned
 void AMario::BeginPlay()
 {
-	Super::BeginPlay();
-	
-	
+	Super::BeginPlay();	
 	
 	CurrentAnimaitonState = MarioAnimationState::AS_IDLE;
 	OldAnimationState = MarioAnimationState::AS_EMPTY;
@@ -118,32 +116,47 @@ void AMario::ProcessAnimStateMachine()
 	{
 	case MarioAnimationState::AS_IDLE:
 		{
-			MySprite->SetFlipbook(Flipbook_Idle);
+			SetAnimState(Flipbook_Idle);
 			break;
 		}
 	case MarioAnimationState::AS_WALKING_RIGHT:
 		{
-			UPaperFlipbook* TargetBook = !bIsJumping ? Flipbook_WalkingRight : Flipbook_Jump;
-			MySprite->SetFlipbook(TargetBook);
-			MySprite->SetRelativeRotation(FRotator(0,0,0));
+			SetAnimState(Flipbook_WalkingRight, FRotator(0,0,0));
 			break;
 		}
 	case MarioAnimationState::AS_WALKING_LEFT:
 		{
-			UPaperFlipbook* TargetBook = !bIsJumping ? Flipbook_WalkingRight : Flipbook_Jump;
-			MySprite->SetFlipbook(TargetBook);
-			MySprite->SetRelativeRotation(FRotator(0,180,0));
+			SetAnimState(Flipbook_WalkingRight, FRotator(0,180,0));
 			break;
 		}
 	case MarioAnimationState::AS_JUMP:
 		{
-			MySprite->SetFlipbook(Flipbook_Jump);
+			SetAnimState(Flipbook_Jump, MySprite->GetRelativeRotation());
+			break;
+		}
+	case MarioAnimationState::AS_DIE:
+		{
+			SetAnimState(Flipbook_Die, MySprite->GetRelativeRotation());
 			break;
 		}
 	}
 }
 
+void AMario::SetAnimState(UPaperFlipbook* TargetFlipBook, FRotator TargetRotation)
+{
+	UPaperFlipbook* NewFlipBook = TargetFlipBook;
 
+	if(!bIsAlive)
+	{
+		NewFlipBook = Flipbook_Die;
+	} else if(bIsJumping)
+	{
+		NewFlipBook = Flipbook_Jump;
+	}
+	
+	MySprite->SetFlipbook(NewFlipBook);
+	MySprite->SetRelativeRotation(TargetRotation);
+}
 
 // Called to bind functionality to input
 void AMario::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -156,6 +169,7 @@ void AMario::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AMario::KillMario()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Mario Dying"));
 	// Exit early if dead
 	if(!bIsAlive) return;
 

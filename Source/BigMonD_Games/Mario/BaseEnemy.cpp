@@ -26,7 +26,7 @@ ABaseEnemy::ABaseEnemy()
 	LeftTrigger->SetupAttachment(RootComponent);
 	RightTrigger->SetupAttachment(RootComponent);
 	HeadTrigger->SetupAttachment(RootComponent);
-	
+
 }
 
 // Called when the game starts or when spawned
@@ -34,14 +34,17 @@ void ABaseEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	MyBodyCollider->OnComponentHit.AddDynamic(this, &ABaseEnemy::OnCollision);
 }
 
 void ABaseEnemy::OnCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
+	
 	if(OtherActor->IsA(AMario::StaticClass()))
 	{
-		Cast<AMario>(OtherActor)->KillMario();
+		AMario* LocalMario =Cast<AMario>(OtherActor);
+		if(LocalMario->IsAlive()) LocalMario->KillMario();
 	}
 }
 
