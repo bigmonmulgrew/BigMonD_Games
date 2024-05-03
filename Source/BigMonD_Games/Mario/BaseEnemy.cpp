@@ -35,16 +35,25 @@ void ABaseEnemy::BeginPlay()
 	Super::BeginPlay();
 	
 	MyBodyCollider->OnComponentHit.AddDynamic(this, &ABaseEnemy::OnCollision);
+	HeadTrigger->OnComponentBeginOverlap.AddDynamic(this, &ABaseEnemy::OnHeadOverlap);
 }
 
 void ABaseEnemy::OnCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
-	
 	if(OtherActor->IsA(AMario::StaticClass()))
 	{
-		AMario* LocalMario =Cast<AMario>(OtherActor);
+		AMario* LocalMario = Cast<AMario>(OtherActor);
 		if(LocalMario->IsAlive()) LocalMario->KillMario();
+	}
+}
+
+void ABaseEnemy::OnHeadOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if(OtherActor->IsA(AMario::StaticClass()))
+	{
+		Cast<AMario>(OtherActor)->BounceMario(BounceForce);
+		Destroy();  // TODO add a death animation.
 	}
 }
 

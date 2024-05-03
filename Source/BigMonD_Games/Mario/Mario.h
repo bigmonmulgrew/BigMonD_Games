@@ -73,8 +73,12 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// Kill Mario
-	void KillMario(); 
+	void KillMario();
 
+	// Bounce Mario
+	void BounceMario(float Force);
+
+	// Getter method for checking if mario is alive
 	bool IsAlive() {return bIsAlive; };
 
 private:

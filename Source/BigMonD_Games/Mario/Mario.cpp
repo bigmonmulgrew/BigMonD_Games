@@ -11,8 +11,6 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
-
-
 void AMario::ConstructorSetupComponents()
 {
 	MySprite = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("MarioBodySprite"));
@@ -62,7 +60,6 @@ AMario::AMario()
 	ConstructorSetupPhysics();
 	
 }
-
 // Called when the game starts or when spawned
 void AMario::BeginPlay()
 {
@@ -72,7 +69,6 @@ void AMario::BeginPlay()
 	OldAnimationState = MarioAnimationState::AS_EMPTY;
 	ProcessAnimStateMachine();
 }
-
 // Called every frame
 void AMario::Tick(float DeltaTime)
 {
@@ -158,9 +154,8 @@ void AMario::SetAnimState(UPaperFlipbook* TargetFlipBook, FRotator TargetRotatio
 	MySprite->SetRelativeRotation(TargetRotation);
 }
 
-// Called to bind functionality to input
 void AMario::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
+{	// Called to bind functionality to input
 	PlayerInputComponent->BindAxis("Horizontal", this, &AMario::MovePlayerHorizontal);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMario::Jump);
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -184,6 +179,11 @@ void AMario::KillMario()
 	DestroyWithDelay(Flipbook_Die->GetTotalDuration());
 }
 
+void AMario::BounceMario(float Force)
+{
+	MyBodyCollider->AddImpulse(FVector(0,0,1) * Force);
+}
+
 void AMario::DestroyWithDelay(float Delay)
 {
 	GetWorld()->GetTimerManager().SetTimerForNextTick([this, Delay]()
@@ -199,6 +199,7 @@ void AMario::DestroyWithDelay(float Delay)
 
 void AMario::MovePlayerHorizontal(float value)
 {
+	if(!bIsAlive) return;
 	MyBodyCollider->AddForce(FVector(1,0,0) * value * PlayerAcceleration, NAME_None, true );
 }
 

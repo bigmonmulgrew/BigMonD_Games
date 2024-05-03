@@ -13,5 +13,18 @@ UCLASS()
 class BIGMOND_GAMES_API AGoombah : public ABaseEnemy
 {
 	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, Category = "Enemy Settings")	float EnemyHorrizontalAcceleration = 1000;
+	UPROPERTY(EditAnywhere, Category = "Enemy Settings")	float EnemyMaxSpeed = 100;
+protected:
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+	UFUNCTION()
+	void OnLeftOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void OnRightOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+private:
+	void Walk();
+	float WalkingDirection = -1;
 	
 };
