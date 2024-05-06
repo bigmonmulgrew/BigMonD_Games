@@ -3,13 +3,11 @@
 
 #include "BigMonD_Games/Mario/Mario.h"
 #include "Components/CapsuleComponent.h"
-#include "PaperSpriteComponent.h"
 #include "PaperFlipbook.h"
-#include "PaperSprite.h"
 #include "PaperFlipbookComponent.h"
-#include "PaperSpriteComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 void AMario::ConstructorSetupComponents()
 {
@@ -164,7 +162,6 @@ void AMario::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AMario::KillMario()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Mario Dying"));
 	// Exit early if dead
 	if(!bIsAlive) return;
 
@@ -190,7 +187,11 @@ void AMario::DestroyWithDelay(float Delay)
 	{
 		GetWorld()->GetTimerManager().SetTimer(
 			TimerHandle_DestroyActor, 
-			[this]() { Destroy(); }, 
+			[this]()
+			{
+				//Destroy(); No need to destroy while we are changing level
+				UGameplayStatics::OpenLevel(GetWorld(), "L_GameOver");
+			}, 
 			Delay, 
 			false
 		);

@@ -23,6 +23,9 @@ void AGoombah::Tick(float DeltaTime)
 
 void AGoombah::Walk()
 {
+	// Exit early if dead
+	if(!bIsAlive) return;
+	
 	MyBodyCollider->AddForce(FVector(1,0,0) * EnemyHorrizontalAcceleration * WalkingDirection);
 
 	FVector ClampedSpeed = MyBodyCollider->GetPhysicsLinearVelocity();
@@ -33,7 +36,7 @@ void AGoombah::Walk()
 
 void AGoombah::OnLeftOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Walked into something"));
+	
 	if(OtherActor->Tags.Contains("Floor"))
 	{
 		WalkingDirection = 1;
@@ -42,7 +45,7 @@ void AGoombah::OnLeftOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 
 void AGoombah::OnRightOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Walked into something"));
+	//UE_LOG(LogTemp, Warning, TEXT("Walked into something"));
 	if(OtherActor->Tags.Contains("Floor"))
 	{
 		WalkingDirection = -1;

@@ -27,37 +27,23 @@ public:
 	
 	// Sets default values for this pawn's properties
 	AMario();
-	UPROPERTY(VisibleAnywhere, Category = "Sprites")
-	class UPaperFlipbookComponent* MySprite;
-	UPROPERTY(VisibleAnywhere, Category = "Collider")
-	class UCapsuleComponent* MyBodyCollider;
-	UPROPERTY(VisibleAnywhere, Category = "Camera Setup")
-	class USpringArmComponent* MySpringArm;
-	UPROPERTY(VisibleAnywhere, Category = "Camera Setup")
-	class UCameraComponent* MyCamera;
+	UPROPERTY(VisibleAnywhere, Category = "Sprites")		class UPaperFlipbookComponent* MySprite;
+	UPROPERTY(VisibleAnywhere, Category = "Collider")		class UCapsuleComponent* MyBodyCollider;
+	UPROPERTY(VisibleAnywhere, Category = "Camera Setup")	class USpringArmComponent* MySpringArm;
+	UPROPERTY(VisibleAnywhere, Category = "Camera Setup")	class UCameraComponent* MyCamera;
 
-	UPROPERTY(EditAnywhere, Category = "Player Properties")
-	float JumpForce = 1000; 
-	UPROPERTY(EditAnywhere, Category = "Player Properties")
-	float PlayerAcceleration = 1000;
-	UPROPERTY(EditAnywhere, Category = "Player Properties")
-	float PlayerMaxSpeed = 100;
+	UPROPERTY(EditAnywhere, Category = "Player Properties")	float JumpForce = 1000; 
+	UPROPERTY(EditAnywhere, Category = "Player Properties")	float PlayerAcceleration = 1000;
+	UPROPERTY(EditAnywhere, Category = "Player Properties")	float PlayerMaxSpeed = 100;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Animations")
-	class UPaperFlipbook* Flipbook_WalkingRight;
-	UPROPERTY(EditDefaultsOnly, Category = "Animations")
-	class UPaperFlipbook* Flipbook_Idle;
-	UPROPERTY(EditDefaultsOnly, Category = "Animations")
-	class UPaperFlipbook* Flipbook_Jump;
-	UPROPERTY(EditDefaultsOnly, Category = "Animations")
-	class UPaperFlipbook* Flipbook_Attack;
-	UPROPERTY(EditDefaultsOnly, Category = "Animations")
-	class UPaperFlipbook* Flipbook_Die;
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")	class UPaperFlipbook* Flipbook_WalkingRight;
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")	class UPaperFlipbook* Flipbook_Idle;
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")	class UPaperFlipbook* Flipbook_Jump;
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")	class UPaperFlipbook* Flipbook_Attack;
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")	class UPaperFlipbook* Flipbook_Die;
 	
-	UPROPERTY(VisibleAnywhere, Category = "Animaitons")
-	MarioAnimationState CurrentAnimaitonState;
-	UPROPERTY(VisibleAnywhere, Category = "Animaitons")
-	MarioAnimationState OldAnimationState;
+	UPROPERTY(VisibleAnywhere, Category = "Animaitons")	MarioAnimationState CurrentAnimaitonState;
+	UPROPERTY(VisibleAnywhere, Category = "Animaitons")	MarioAnimationState OldAnimationState;
 	
 protected:
 	// Called when the game starts or when spawned
