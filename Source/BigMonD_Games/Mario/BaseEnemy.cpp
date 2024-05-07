@@ -90,18 +90,14 @@ void ABaseEnemy::KillEnemy()
 
 void ABaseEnemy::DestroyWithDelay(float Delay)
 {
-	GetWorld()->GetTimerManager().SetTimerForNextTick([this, Delay]()
+	// Setting the timer with a lambda to destroy the actor
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle_DestroyActor, [this]()
 	{
-		GetWorld()->GetTimerManager().SetTimer(
-			TimerHandle_DestroyActor, 
-			[this]()
-			{
-				Destroy(); 
-			}, 
-			Delay, 
-			false
-		);
-	});
+		if (IsValid(this))  // Checks if the actor is still valid
+		{
+			Destroy();
+		}
+	}, Delay, false);
 }
 
 // Called every frame
@@ -185,3 +181,13 @@ void ABaseEnemy::SetAnimState(UPaperFlipbook* TargetFlipBook,FRotator TargetRota
 	MySprite->SetRelativeRotation(TargetRotation);
 }
 
+void ABaseEnemy::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	// Ensure the timer is cleared when the actor is destroyed or level is unloaded
+	if (TimerHandle_DestroyActor.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(TimerHandle_DestroyActor);
+	}
+}

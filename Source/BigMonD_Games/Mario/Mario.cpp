@@ -190,19 +190,17 @@ void AMario::BounceMario(float Force)
 
 void AMario::DestroyWithDelay(float Delay)
 {
-	GetWorld()->GetTimerManager().SetTimerForNextTick([this, Delay]()
-	{
-		GetWorld()->GetTimerManager().SetTimer(
-			TimerHandle_DestroyActor, 
-			[this]()
-			{
-				//Destroy(); No need to destroy while we are changing level
-				UGameplayStatics::OpenLevel(GetWorld(), "L_GameOver");
-			}, 
-			Delay, 
-			false
-		);
-	});
+	
+	GetWorld()->GetTimerManager().SetTimer(
+		TimerHandle_DestroyActor, 
+		[this]()
+		{
+			//Destroy(); No need to destroy while we are changing level
+			UGameplayStatics::OpenLevel(GetWorld(), "L_GameOver");
+		}, 
+		Delay, 
+		false
+	);
 }
 
 void AMario::MovePlayerHorizontal(float value)
