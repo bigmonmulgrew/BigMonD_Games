@@ -17,10 +17,8 @@ public:
 	// Sets default values for this actor's properties
 	ACollectible();
 
-	UPROPERTY(VisibleAnywhere, Category = "Sprites")
-	class UPaperSpriteComponent* MySprite;
-	UPROPERTY(EditAnywhere, Category = "Game Balance")
-	int ScoreValue = 0;
+	UPROPERTY(VisibleAnywhere, Category = "Sprites")	class UPaperSpriteComponent* MySprite;
+	UPROPERTY(EditAnywhere, Category = "Game Balance")	int ScoreValue = 0;
 	
 protected:
 	// Called when the game starts or when spawned
