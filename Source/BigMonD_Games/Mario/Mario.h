@@ -64,8 +64,10 @@ public:
 	// Grow Marios Size
 	void GrowMario();
 
+	
 	// Bounce Mario
 	void BounceMario(float Force);
+	void BounceMario(float Force, FVector Direction);
 
 	// Getter method for checking if mario is alive
 	bool IsAlive() {return bIsAlive; };
