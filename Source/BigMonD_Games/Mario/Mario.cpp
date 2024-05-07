@@ -64,7 +64,8 @@ AMario::AMario()
 void AMario::BeginPlay()
 {
 	Super::BeginPlay();	
-	
+
+	InitialScale = GetActorScale();
 	CurrentAnimaitonState = MarioAnimationState::AS_IDLE;
 	OldAnimationState = MarioAnimationState::AS_EMPTY;
 	ProcessAnimStateMachine();
@@ -183,6 +184,18 @@ void AMario::KillMario()
 	DestroyWithDelay(Flipbook_Die->GetTotalDuration());
 }
 
+void AMario::GrowMario()
+{
+	SetActorScale3D(GetActorScale() + InitialScale);
+
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, TEXT("You can stack these mushrooms for unlimited size, its not a bug its a feature."));
+	}
+
+}
+
+
 void AMario::BounceMario(float Force)
 {
 	MyBodyCollider->AddImpulse(FVector(0,0,1) * Force);
@@ -211,16 +224,17 @@ void AMario::MovePlayerHorizontal(float value)
 
 void AMario::Jump()
 {
-	// Exit early if dead
-	if(!bIsAlive) return;
+	// Exit early if dead or already jumping
+	if (!bIsAlive || bIsJumping) return;
+
+	// Calculate the jump force based on the character's scale
+	float ScaleFactor = GetActorScale3D().X;  // Assuming uniform scaling for simplicity	
 	
-	if(!bIsJumping)
-	{
-		MyBodyCollider->AddImpulse(FVector(0,0,1) * JumpForce);
-		bIsJumping = true;
-		CurrentAnimaitonState = MarioAnimationState::AS_JUMP;
-		ProcessAnimStateMachine();
-	}
+	MyBodyCollider->AddImpulse(FVector::UpVector * JumpForce * FMath::Pow(ScaleFactor, 1.0f / 3.0f)); //Cube root to givbe less increase per scale increase
+	bIsJumping = true;
+	CurrentAnimaitonState = MarioAnimationState::AS_JUMP;
+	ProcessAnimStateMachine();
+
 	
 }
 

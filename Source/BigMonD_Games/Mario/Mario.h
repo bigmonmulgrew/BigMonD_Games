@@ -58,8 +58,11 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	// Kill Mario
-	void KillMario();
+	// Kill Mario, also shrink Mario 
+	void KillMario(); 
+
+	// Grow Marios Size
+	void GrowMario();
 
 	// Bounce Mario
 	void BounceMario(float Force);
@@ -67,10 +70,13 @@ public:
 	// Getter method for checking if mario is alive
 	bool IsAlive() {return bIsAlive; };
 
+
+
 private:
 	const int KillHeight = -450;
 	bool bIsJumping;
 	bool bIsAlive = true;
+	FVector InitialScale;
 	void MovePlayerHorizontal(float value);
 	void Jump();
 	void ConstructorSetupPhysics();
