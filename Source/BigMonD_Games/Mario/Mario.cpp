@@ -227,7 +227,7 @@ void AMario::Jump()
 }
 
 void AMario::OnCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	FVector NormalImpulse, const FHitResult& Hit)
+                         FVector NormalImpulse, const FHitResult& Hit)
 {
 	// Exit early if dead
 	if(!bIsAlive) return;
@@ -236,6 +236,7 @@ void AMario::OnCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, 
 	{
 		bIsJumping = false;
 		CurrentAnimaitonState = MarioAnimationState::AS_IDLE;
-	}
+	} 
+
 }
 

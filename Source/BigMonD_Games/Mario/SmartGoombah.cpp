@@ -27,13 +27,13 @@ void ASmartGoombah::BeginPlay()
 void ASmartGoombah::LeftEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hole Detected"));
+	//UE_LOG(LogTemp, Warning, TEXT("Hole Detected"));
 	if(OtherActor->Tags.Contains("Floor")) WalkingDirection = 1;
 }
 
 void ASmartGoombah::RightEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hole Detected"));
+	//UE_LOG(LogTemp, Warning, TEXT("Hole Detected"));
 	if(OtherActor->Tags.Contains("Floor")) WalkingDirection = -1;
 }
