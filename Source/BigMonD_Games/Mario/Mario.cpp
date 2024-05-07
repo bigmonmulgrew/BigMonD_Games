@@ -3,6 +3,7 @@
 
 #include "BigMonD_Games/Mario/Mario.h"
 #include "Components/CapsuleComponent.h"
+#include "PaperTileMapComponent.h"
 #include "PaperFlipbook.h"
 #include "PaperFlipbookComponent.h"
 #include "Camera/CameraComponent.h"
@@ -20,6 +21,7 @@ void AMario::ConstructorSetupComponents()
 	MySpringArm->SetupAttachment(RootComponent);
 	MyCamera->SetupAttachment(MySpringArm);
 }
+
 void AMario::ConstructorSetupPhysics()
 {
 	// Setup Physics
@@ -81,8 +83,13 @@ void AMario::Tick(float DeltaTime)
 
 	IdentifyAnimStates();
 	ProcessAnimStateMachine();
+	CheckPlayerHeight();
 }
 
+void AMario::CheckPlayerHeight()
+{
+	if(GetActorLocation().Z <= KillHeight) KillMario();
+}
 void AMario::IdentifyAnimStates()
 {
 	
@@ -231,3 +238,4 @@ void AMario::OnCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, 
 		CurrentAnimaitonState = MarioAnimationState::AS_IDLE;
 	}
 }
+

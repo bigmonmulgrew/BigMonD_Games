@@ -68,12 +68,14 @@ public:
 	bool IsAlive() {return bIsAlive; };
 
 private:
+	const int KillHeight = -450;
 	bool bIsJumping;
 	bool bIsAlive = true;
 	void MovePlayerHorizontal(float value);
 	void Jump();
 	void ConstructorSetupPhysics();
 	void ConstructorSetupComponents();
+	void CheckPlayerHeight();
 	void IdentifyAnimStates();
 	void ProcessAnimStateMachine();
 	void SetAnimState(UPaperFlipbook* TargetFlipBook, FRotator TargetRotation = FRotator(0,0,0));
