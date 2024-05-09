@@ -74,10 +74,22 @@ void ABreakoutBall::Tick(float DeltaTime)
 
 void ABreakoutBall::ChangeDirection(FVector* MyUpdatedLocaiton)
 {
-	if     (MyUpdatedLocaiton->Z + BallHalfWidth >  HalfPlayFieldHeight) MyVelocity.Z = -BallSpeed; 
+	if     (MyUpdatedLocaiton->Z + BallHalfWidth >  HalfPlayFieldHeight)
+	{
+		MyVelocity.Z = -BallSpeed;
+		UGameplayStatics::PlaySoundAtLocation(this, BallSound, GetActorLocation());
+	} 
 	else if(MyUpdatedLocaiton->Z				 < -HalfPlayFieldHeight) LoseBall(); 
-	else if(MyUpdatedLocaiton->X + BallHalfWidth >  HalfPlayFieldWidth)	 MyVelocity.X = -BallSpeed; 
-	else if(MyUpdatedLocaiton->X - BallHalfWidth < -HalfPlayFieldWidth)	 MyVelocity.X =  BallSpeed; 
+	else if(MyUpdatedLocaiton->X + BallHalfWidth >  HalfPlayFieldWidth)
+	{
+		MyVelocity.X = -BallSpeed;
+		UGameplayStatics::PlaySoundAtLocation(this, BallSound, GetActorLocation());
+	} 
+	else if(MyUpdatedLocaiton->X - BallHalfWidth < -HalfPlayFieldWidth)
+	{
+		MyVelocity.X =  BallSpeed;
+		UGameplayStatics::PlaySoundAtLocation(this, BallSound, GetActorLocation());
+	} 
 }
 
 void ABreakoutBall::LoseBall()
@@ -109,15 +121,24 @@ void ABreakoutBall::HitBrick(AActor* OtherActor)
 	{
 		if     (HitDirection.X > 0) MyVelocity.X =  BallSpeed;
 		else if(HitDirection.X < 0) MyVelocity.X = -BallSpeed;
+		UGameplayStatics::PlaySoundAtLocation(this, BallSound, GetActorLocation());
 	}
 	else
 	{
 		if     (HitDirection.Z > 0) MyVelocity.Z =  BallSpeed;
 		else if(HitDirection.Z < 0) MyVelocity.Z = -BallSpeed;
+		UGameplayStatics::PlaySoundAtLocation(this, BallSound, GetActorLocation());
 	}
 		
 	//Destroy the brick
-	OtherActor->Destroy();
+	if(Cast<ABreakoutBrick>(OtherActor)->GetBrickHealth() < 1)
+	{
+		OtherActor->Destroy();	
+	}else
+	{
+		Cast<ABreakoutBrick>(OtherActor)->DecreaseHealth();
+	}
+	
 }
 
 void ABreakoutBall::HitBat()
@@ -133,6 +154,14 @@ void ABreakoutBall::OnCollision(UPrimitiveComponent* OverlappedComponent,
                                 const FHitResult& SweepResult)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Breakout Ball: I hit something"));
-	if     (OtherActor->IsA(ABreakoutBat::StaticClass()))		HitBat();
-	else if(OtherActor->IsA(ABreakoutBrick::StaticClass()))	HitBrick(OtherActor);
+	if     (OtherActor->IsA(ABreakoutBat::StaticClass()))
+	{
+		HitBat();
+		UGameplayStatics::PlaySoundAtLocation(this, BallSound, GetActorLocation());
+	}
+	else if(OtherActor->IsA(ABreakoutBrick::StaticClass()))
+	{
+		HitBrick(OtherActor);
+		UGameplayStatics::PlaySoundAtLocation(this, BallSound, GetActorLocation());
+	}
 }

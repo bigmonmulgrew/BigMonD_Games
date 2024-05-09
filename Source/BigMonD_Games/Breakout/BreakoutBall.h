@@ -30,6 +30,7 @@ protected:
 	class UBoxComponent* MyCollider;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Settings");
 	float BallSpeed = 300;
+	UPROPERTY(EditAnywhere, Category = "Audio")	class USoundBase* BallSound;
 
 public:	
 	// Called every frame

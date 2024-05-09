@@ -26,3 +26,7 @@ void ABreakoutBrick::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void ABreakoutBrick::DecreaseHealth(int damage)
+{
+	BlockHealth -= damage;
+}
