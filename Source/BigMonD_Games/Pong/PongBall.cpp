@@ -48,6 +48,8 @@ void APongBall::BeginPlay()
 	
 	HalfPlayFieldHeight = (GameCameraComponent->OrthoWidth / GameCameraComponent->AspectRatio) / 2;
 	HalfPlayFieldWidth  = (GameCameraComponent->OrthoWidth / 2);
+
+	StartingBallSpeed = BallSpeed;
 	
 }
 
@@ -64,8 +66,11 @@ void APongBall::Tick(float DeltaTime)
 	if(!Scored)	SetActorLocation(MyUpdatedLocation);
 	else
 	{
+		BallSpeed = StartingBallSpeed;
+		NormalizeBallVelocity(MyVelocity);
 		SetActorLocation(FVector::Zero());
 		Scored = false;
+		
 	}
 
 	
@@ -74,10 +79,27 @@ void APongBall::Tick(float DeltaTime)
 void APongBall::ChangeDirection(const FVector* MyUpdatedLocation)
 {
 	const float VerticalLimit = HalfPlayFieldHeight - EdgeBuffer;
-	if     (MyUpdatedLocation->Z + BallHalfWidth >  VerticalLimit)		MyVelocity.Z = -BallSpeed; // Magic number bad
-	else if(MyUpdatedLocation->Z - BallHalfWidth < -VerticalLimit)		MyVelocity.Z =  BallSpeed; // Magic number bad
-	else if(MyUpdatedLocation->X + BallHalfWidth >  HalfPlayFieldWidth)	GainScore(0); 
-	else if(MyUpdatedLocation->X - BallHalfWidth < -HalfPlayFieldWidth)	GainScore(1); 
+	if     (MyUpdatedLocation->Z + BallHalfWidth >  VerticalLimit)
+	{
+		MyVelocity.Z = -BallSpeed; 
+		UGameplayStatics::PlaySoundAtLocation(this, BallSound, GetActorLocation());
+	}
+	else if(MyUpdatedLocation->Z - BallHalfWidth < -VerticalLimit)
+	{
+		MyVelocity.Z =  BallSpeed; 
+		UGameplayStatics::PlaySoundAtLocation(this, BallSound, GetActorLocation());
+	}
+	else if(MyUpdatedLocation->X + BallHalfWidth >  HalfPlayFieldWidth)
+	{
+		GainScore(0); 
+		UGameplayStatics::PlaySoundAtLocation(this, ScoreSound, GetActorLocation());
+	}
+	
+	else if(MyUpdatedLocation->X - BallHalfWidth < -HalfPlayFieldWidth)
+	{
+		GainScore(1); 
+		UGameplayStatics::PlaySoundAtLocation(this, ScoreSound, GetActorLocation());
+	}
 }
 
 void APongBall::GainScore(int player)
@@ -118,7 +140,7 @@ void APongBall::OnCollision(UPrimitiveComponent* OverlappedComponent,
 {
 	if(ABasePongBat* bat = Cast<ABasePongBat>(OtherActor))
 	{
-		
+		BallSpeed *= 1.1;  // Magic number bad
 		float RelativePosition = GetRelativePosition(bat); 
 		
 		// When between -0.3 and 0.3 skip z axis modifier
@@ -131,6 +153,7 @@ void APongBall::OnCollision(UPrimitiveComponent* OverlappedComponent,
 		MyVelocity.X = -MyVelocity.X; // Reflect X velocity when in center of paddle
 		
 		NormalizeBallVelocity(MyVelocity); // Ensures the ball speed is consistent after a direction change.
+		UGameplayStatics::PlaySoundAtLocation(this, BallSound, GetActorLocation());
 	}
 	 
 }

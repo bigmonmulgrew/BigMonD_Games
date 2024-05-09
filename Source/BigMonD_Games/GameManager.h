@@ -13,7 +13,7 @@ class BIGMOND_GAMES_API AGameManager : public AActor
 	
 protected:
 	FTimerHandle LevelReloadTimerHandle;
-	float DelayBeforeReload = 5.0f; // Delay in seconds 
+	float DelayBeforeReload = 8.0f; // Delay in seconds 
 public:
 	void ReloadLevel();
 	void LoadTitle();

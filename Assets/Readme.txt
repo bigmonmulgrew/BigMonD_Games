@@ -1,16 +1,17 @@
 ## Readme file for assignment 1 submission 100705789
 
 # Known issues
-I've regularly had to switch from unreal version 5.2 to unreal version 5.2 when changing machine or I get some unpredicable behaviour
+I've regularly had to switch from unreal version 5.2 to unreal version 5.2 when changing machine or I get some unpredicable behaviour. 
 
 # Instructions
-From the title screen press the number line buttons to select a level. You can do this inside levels too
+From the title screen press the number line buttons to select a level. You can do this inside levels too.
+Games with a thumbnail on the title screen are playable
 
 1. Pong				Classic
 2. Breakout			Classic
 3. Peggle			Classic
 4. Mario clone		Classic
-5. Fiendly Pong		Up to 4 player game mode 
+5. Fiendly Pong		Up to 4 player game mode, friendly because you have to be to play 4 players to one keyboard
 6. Breakout ????
 7. Peggle ??????
 8. Mario ??????

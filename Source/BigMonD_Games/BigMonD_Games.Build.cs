@@ -10,7 +10,13 @@ public class BigMonD_Games : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
-			"Core", "CoreUObject", "Engine", "InputCore", "Paper2D", "PhysicsCore"
+			"Core",
+			"CoreUObject",
+			"Engine",
+			"InputCore",
+			"UMG",			// Include UMG module for User Widgets
+			"Paper2D",		// Added for sprite management
+			"PhysicsCore"	// Added for something I cant remember in Mario
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "Paper2D" });

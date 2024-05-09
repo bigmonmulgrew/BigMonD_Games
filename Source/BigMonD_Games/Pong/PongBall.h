@@ -26,14 +26,12 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	UPROPERTY(VisibleAnywhere, Category = "Sprites");
-	class UPaperSpriteComponent* MySprite;
-	UPROPERTY(VisibleAnywhere, Category = "Sprites");
-	class UBoxComponent* MyCollider;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Settings");
-	float BallSpeed = 300;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Settings");
-	float EdgeBuffer = 8;   //Amount to reduce teh top and bottom playfield edge by to correspond to image
+	UPROPERTY(VisibleAnywhere, Category = "Sprites") class UPaperSpriteComponent* MySprite;
+	UPROPERTY(EditAnywhere, Category = "Audio")	class USoundBase* BallSound;
+	UPROPERTY(EditAnywhere, Category = "Audio")	class USoundBase* ScoreSound;
+	UPROPERTY(VisibleAnywhere, Category = "Sprites")	class UBoxComponent* MyCollider;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Settings")	float BallSpeed = 300;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Settings")	float EdgeBuffer = 8;   //Amount to reduce the top and bottom playfield edge by to correspond to image
 	AGameManagerPong* GameManagerPong;
 
 public:	
@@ -41,6 +39,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 private:
+	float StartingBallSpeed;
 	FVector MyVelocity;
 	float HalfPlayFieldHeight;
 	float HalfPlayFieldWidth;
