@@ -1,4 +1,5 @@
 ## Readme file for assignment 1 submission 100705789
+Built in Unreal 5.2.1
 
 # Known issues
 I've regularly had to switch from unreal version 5.2 to unreal version 5.2 when changing machine or I get some unpredicable behaviour. 
@@ -20,7 +21,13 @@ Games with a thumbnail on the title screen are playable
 
 # 1 Pong
 This is classsic pong. Game plays first to 3 scores, winner will be announced and then after a short delay will return to the title screen
-There is a GameManager in the outliner with a setting for the MaxScore 
+There is a GameManager in the outliner with a setting for the MaxScore
+Controls:  W - Up, S - Down 
 
 # 2 Breakout
 This is classic Breakout, you have 3 extra lives, lose the 4th ball and you lose.
+Controls: A - Left, D - Right
+
+# Peggle
+A simple Peggle clone, one ball at a time.
+Controls: A - Aim Left, D - Aim Right, Left Click - Fire
