@@ -52,12 +52,20 @@ void APeggleBallLauncher::MovePlayer(float input)
 
 void APeggleBallLauncher::Fire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Firing!"));
-	AActor* SpawnedBall = GetWorld()->SpawnActor<AActor>(Ball, GetActorLocation(), GetActorRotation());
-	FVector ShotDirection = GetActorUpVector()*= -1;
-	SpawnedBall->GetComponentByClass<UPaperSpriteComponent>()->AddImpulse(ShotDirection * ShotPower);
+	if(!bFired)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Firing!"));
+		AActor* SpawnedBall = GetWorld()->SpawnActor<AActor>(Ball, GetActorLocation(), GetActorRotation());
+		FVector ShotDirection = GetActorUpVector()*= -1;
+		SpawnedBall->GetComponentByClass<UPaperSpriteComponent>()->AddImpulse(ShotDirection * ShotPower);
+		bFired = true;
+	}
+	
 }
 
-
+void APeggleBallLauncher::ReloadBall()
+{
+	bFired = false;
+}
 
 

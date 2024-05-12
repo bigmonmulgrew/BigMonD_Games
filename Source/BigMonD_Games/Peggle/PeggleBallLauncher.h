@@ -23,6 +23,9 @@ class BIGMOND_GAMES_API APeggleBallLauncher : public APawn
 	TSubclassOf<AActor> Ball;
 	UPROPERTY(EditAnywhere, Category = "Ammo")
 	float ShotPower = 2000.0;
+
+public:
+	void ReloadBall();
 	
 protected:
 	// Called when the game starts or when spawned
@@ -32,5 +35,6 @@ protected:
 private:
 	void MovePlayer(float input);
 	void Fire();
+	bool bFired = false;
 
 };
