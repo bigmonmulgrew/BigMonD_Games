@@ -16,6 +16,7 @@ class BIGMOND_GAMES_API AGoombah : public ABaseEnemy
 public:
 	UPROPERTY(EditAnywhere, Category = "Enemy Settings")	float EnemyHorrizontalAcceleration = 1000;
 	UPROPERTY(EditAnywhere, Category = "Enemy Settings")	float EnemyMaxSpeed = 100;
+	UPROPERTY(EditAnywhere, Category = "Enemy Settings")	bool StartWalkingRight = false;
 protected:
 	float WalkingDirection = -1;
 	virtual void BeginPlay() override;

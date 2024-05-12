@@ -12,6 +12,8 @@ void AGoombah::BeginPlay()
 	
 	LeftTrigger->OnComponentBeginOverlap.AddDynamic(this, &AGoombah::OnLeftOverlap);
 	RightTrigger->OnComponentBeginOverlap.AddDynamic(this, &AGoombah::OnRightOverlap);
+
+	if(StartWalkingRight) WalkingDirection = 1;
 }
 
 void AGoombah::Tick(float DeltaTime)
