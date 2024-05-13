@@ -49,6 +49,6 @@ private:
 	void DamageBrick(AActor* OtherActor);
 	void LoseBall();
 	void HitBrick(AActor* OtherActor);
-	void HitBat();
+	void HitBat(AActor* OtherActor);
 	//void OnCollision();
 };

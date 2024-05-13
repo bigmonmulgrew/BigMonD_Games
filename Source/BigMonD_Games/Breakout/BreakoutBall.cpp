@@ -149,11 +149,27 @@ void ABreakoutBall::HitBrick(AActor* OtherActor)
 }
 
 
-void ABreakoutBall::HitBat()
+void ABreakoutBall::HitBat(AActor* OtherActor)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("I HIT THE BAT"));
-	FVector BatPosition = GetActorLocation();
-	MyVelocity.Z = BallSpeed;
+	UPaperSpriteComponent* SpriteComponent = Cast<UPaperSpriteComponent>(OtherActor->GetComponentByClass(UPaperSpriteComponent::StaticClass()));
+	if (!SpriteComponent) return;  // Safety check
+
+	FVector BrickCenter = OtherActor->GetActorLocation();
+	FVector BrickSize = FVector(SpriteComponent->Bounds.GetBox().GetSize().X,
+								0.f,
+								SpriteComponent->Bounds.GetBox().GetSize().Z); 
+
+	FVector BallLocation = GetActorLocation();
+	FVector ImpactVector = BallLocation - BrickCenter;
+	FVector NormalizedImpact = ImpactVector / BrickSize;
+
+	// Calculate reflection based on normalized impact vector
+	if (fabs(NormalizedImpact.X) > fabs(NormalizedImpact.Z)) {
+		MyVelocity.X = (NormalizedImpact.X > 0 ? 1 : -1) * BallSpeed;  // Reflect based on X-axis impact
+	} else {
+		MyVelocity.Z = (NormalizedImpact.Z > 0 ? 1 : -1) * BallSpeed;  // Reflect based on Z-axis impact
+	}
+	// Optionally adjust velocity based on the bat's movement speed or other gameplay factors
 }
 
 void ABreakoutBall::OnCollision(UPrimitiveComponent* OverlappedComponent,
@@ -164,7 +180,7 @@ void ABreakoutBall::OnCollision(UPrimitiveComponent* OverlappedComponent,
 	if
 	(OtherActor->IsA(ABreakoutBat::StaticClass()))
 	{
-		HitBat();
+		HitBat(OtherActor);
 		UGameplayStatics::PlaySoundAtLocation(this, BallSound, GetActorLocation());
 	}
 	else if(OtherActor->IsA(ABreakoutBrick::StaticClass()))
