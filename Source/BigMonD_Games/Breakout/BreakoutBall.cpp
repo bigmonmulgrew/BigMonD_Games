@@ -2,6 +2,7 @@
 
 #include "BreakoutBat.h"
 #include "BreakoutBrick.h"
+#include "PaperSprite.h"
 #include "PaperSpriteComponent.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
@@ -110,26 +111,8 @@ void ABreakoutBall::RespawnBall()
 	Respawning = true;
 }
 
-void ABreakoutBall::HitBrick(AActor* OtherActor)
+void ABreakoutBall::DamageBrick(AActor* OtherActor)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("I HIT A BRICK"));
-
-	//Deflect The Ball
-	FVector HitDirection = GetActorLocation() - OtherActor->GetActorLocation();
-	HitDirection.Normalize();
-	if(abs(HitDirection.X) > abs(HitDirection.Z))
-	{
-		if     (HitDirection.X > 0) MyVelocity.X =  BallSpeed;
-		else if(HitDirection.X < 0) MyVelocity.X = -BallSpeed;
-		UGameplayStatics::PlaySoundAtLocation(this, BallSound, GetActorLocation());
-	}
-	else
-	{
-		if     (HitDirection.Z > 0) MyVelocity.Z =  BallSpeed;
-		else if(HitDirection.Z < 0) MyVelocity.Z = -BallSpeed;
-		UGameplayStatics::PlaySoundAtLocation(this, BallSound, GetActorLocation());
-	}
-		
 	//Destroy the brick
 	if(Cast<ABreakoutBrick>(OtherActor)->GetBrickHealth() < 1)
 	{
@@ -138,8 +121,33 @@ void ABreakoutBall::HitBrick(AActor* OtherActor)
 	{
 		Cast<ABreakoutBrick>(OtherActor)->DecreaseHealth();
 	}
-	
 }
+
+void ABreakoutBall::HitBrick(AActor* OtherActor)
+{
+	// Retrieve the PaperSpriteComponent from the brick
+	UPaperSpriteComponent* SpriteComponent = Cast<UPaperSpriteComponent>(OtherActor->GetComponentByClass(UPaperSpriteComponent::StaticClass()));
+	if (!SpriteComponent) return;  // Safety check
+
+	FVector BrickCenter = OtherActor->GetActorLocation();
+	FVector BrickSize = FVector(SpriteComponent->Bounds.GetBox().GetSize().X,
+								0.f,
+								SpriteComponent->Bounds.GetBox().GetSize().Z); 
+
+	FVector BallLocation = GetActorLocation();
+	FVector ImpactVector = BallLocation - BrickCenter;
+	FVector NormalizedImpact = ImpactVector / BrickSize;
+
+	// Calculate reflection based on normalized impact vector
+	if (fabs(NormalizedImpact.X) > fabs(NormalizedImpact.Z)) {
+		MyVelocity.X = (NormalizedImpact.X > 0 ? 1 : -1) * BallSpeed;  // Reflect based on X-axis impact
+	} else {
+		MyVelocity.Z = (NormalizedImpact.Z > 0 ? 1 : -1) * BallSpeed;  // Reflect based on Z-axis impact
+	}
+
+	DamageBrick(OtherActor);
+}
+
 
 void ABreakoutBall::HitBat()
 {
@@ -153,8 +161,8 @@ void ABreakoutBall::OnCollision(UPrimitiveComponent* OverlappedComponent,
                                 int32 OtherBodyIndex, bool bFromSweep,
                                 const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Breakout Ball: I hit something"));
-	if     (OtherActor->IsA(ABreakoutBat::StaticClass()))
+	if
+	(OtherActor->IsA(ABreakoutBat::StaticClass()))
 	{
 		HitBat();
 		UGameplayStatics::PlaySoundAtLocation(this, BallSound, GetActorLocation());

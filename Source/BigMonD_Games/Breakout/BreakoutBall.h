@@ -46,6 +46,7 @@ private:
 	AGameManagerBreakout* GameManager;
 	void ChangeDirection(FVector* MyUpdatedLocaiton);
 	void RespawnBall();
+	void DamageBrick(AActor* OtherActor);
 	void LoseBall();
 	void HitBrick(AActor* OtherActor);
 	void HitBat();
