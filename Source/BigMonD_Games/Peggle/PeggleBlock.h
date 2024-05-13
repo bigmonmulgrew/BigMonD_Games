@@ -15,20 +15,15 @@ public:
 	// Sets default values for this actor's properties
 	APeggleBlock();
 	
-	UPROPERTY(VisibleAnywhere, Category = "Sprites");
-	class UPaperSpriteComponent* MySprite;
-	UPROPERTY(EditAnywhere, Category="Control")
-	float RotationSpeed =  0;
-	UPROPERTY(EditAnywhere, Category="Control")
-	float OscillationSpeed =  0;
-	UPROPERTY(EditAnywhere, Category="Control")
-	FVector OscillationOffeset =  {0,0,0};
+	UPROPERTY(VisibleAnywhere, Category = "Sprites") class UPaperSpriteComponent* MySprite;
+	UPROPERTY(EditAnywhere, Category="Control")	float RotationSpeed =  0;
+	UPROPERTY(EditAnywhere, Category="Control")	float OscillationSpeed =  0;
+	UPROPERTY(EditAnywhere, Category="Control")	FVector OscillationOffeset =  {0,0,0};
 	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	
 
 protected:
 	// Called when the game starts or when spawned
@@ -36,6 +31,13 @@ protected:
 	void RotateObject(float DeltaTime);
 	void OscillateObject(float DeltaTime);
 	virtual void OnConstruction(const FTransform& Transform) override;
+
+	UFUNCTION()
+	virtual void OnHit(UPrimitiveComponent* HitComponent,
+			   AActor* OtherActor,
+			   UPrimitiveComponent* OtherComp,
+			   FVector NormalImpulse,
+			   const FHitResult& Hit);
 
 private:
 	FTimerHandle DestroyTimer;
