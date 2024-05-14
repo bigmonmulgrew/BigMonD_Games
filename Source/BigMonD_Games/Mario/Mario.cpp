@@ -195,7 +195,6 @@ void AMario::GrowMario()
 
 }
 
-
 void AMario::BounceMario(float Force)
 {
 	MyBodyCollider->AddImpulse(FVector(0,0,1) * Force);

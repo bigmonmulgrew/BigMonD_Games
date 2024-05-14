@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Mario.h"
 #include "GameFramework/Actor.h"
 #include "BaseEnemy.generated.h"
 
@@ -43,9 +44,14 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Animaitons")	EnemyAnimationState CurrentAnimaitonState;
 	UPROPERTY(VisibleAnywhere, Category = "Animaitons")	EnemyAnimationState OldAnimationState;
 
+	UPROPERTY(EditAnywhere, Category = "Death")	bool KickableCorpse;
+	UPROPERTY(EditAnywhere, Category = "Death")	float CorpseForce = 500;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	void CollisonWhenAlive(AActor* OtherActor, AMario* LocalMario);
+	void CollisionWhenDead(AActor* OtherActor, AMario* LocalMario);
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	UFUNCTION()
 	void OnCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
@@ -59,12 +65,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	bool bIsAlive = true;
+	bool IsLethalProjectile();
 
 private:
 	bool bIsJumping;
+	float ProjectileMinSpeed = 1.0f;
 	FTimerHandle TimerHandle_DestroyActor;
 	void DestroyWithDelay(float Delay);
 	void IdentifyAnimStates();
 	void ProcessAnimStateMachine();
 	void SetAnimState(UPaperFlipbook* TargetFlipBook, FRotator TargetRotation = FRotator(0,0,0));
+	
 };
