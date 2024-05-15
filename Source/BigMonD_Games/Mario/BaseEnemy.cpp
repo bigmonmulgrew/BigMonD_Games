@@ -38,15 +38,41 @@ void ABaseEnemy::BeginPlay()
 	HeadTrigger->OnComponentBeginOverlap.AddDynamic(this, &ABaseEnemy::OnHeadOverlap);
 }
 
-void ABaseEnemy::OnCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	FVector NormalImpulse, const FHitResult& Hit)
+void ABaseEnemy::CollisonWhenAlive(AActor* OtherActor, AMario* LocalMario)
 {
-	// Exit early if dead
-	if(!bIsAlive) return;
 	if(OtherActor->IsA(AMario::StaticClass()))
 	{
-		Cast<AMario>(OtherActor)->KillMario();
+		LocalMario->KillMario();
 	}
+	else if(OtherActor->IsA(ABaseEnemy::StaticClass()))
+	{
+		if(Cast<ABaseEnemy>(OtherActor)->IsLethalProjectile()) KillEnemy();
+	}
+}
+
+void ABaseEnemy::CollisionWhenDead(AActor* OtherActor, AMario* LocalMario)
+{
+	if(OtherActor->IsA(AMario::StaticClass()))
+	{
+		float CorpsePosition = GetActorLocation().X - LocalMario->GetActorLocation().X;
+		int NormalizedValue = (CorpsePosition > 0) ? 1 : ((CorpsePosition < 0) ? -1 : 0);
+		MyBodyCollider->AddImpulse(FVector(1,0,0) * NormalizedValue * CorpseForce);
+	}
+}
+
+void ABaseEnemy::OnCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+                             FVector NormalImpulse, const FHitResult& Hit)
+{
+	AMario* LocalMario = Cast<AMario>(OtherActor);
+	if(bIsAlive)
+	{
+		CollisonWhenAlive(OtherActor, LocalMario);
+	}
+	else if(KickableCorpse)
+	{
+		CollisionWhenDead(OtherActor, LocalMario);
+	}
+	
 }
 void ABaseEnemy::OnHeadOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -109,6 +135,13 @@ void ABaseEnemy::Tick(float DeltaTime)
 
 	IdentifyAnimStates();
 	ProcessAnimStateMachine();
+}
+
+bool ABaseEnemy::IsLethalProjectile()
+{
+	bool bMovingFast = MyBodyCollider->GetPhysicsLinearVelocity().Size() > ProjectileMinSpeed;
+
+	return KickableCorpse && bMovingFast;
 }
 
 void ABaseEnemy::IdentifyAnimStates()
