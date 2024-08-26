@@ -1,9 +1,9 @@
 // Copyright 100705789
 
 
+#include "BigMonD_Games/Peggle/PegglePowerUpBlock.h"
 #include "Kismet/GameplayStatics.h"  // For UGameplayStatics
 #include "GameFramework/Actor.h"     // For AActor
-#include "BigMonD_Games/Peggle/PegglePowerUpBlock.h"
 
 void APegglePowerUpBlock::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)

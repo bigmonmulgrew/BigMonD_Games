@@ -77,6 +77,6 @@ void AOscillatingHazard::OnCollision(UPrimitiveComponent* OverlappedComponent, A
 
 void AOscillatingHazard::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
-    Super::PostEditChangeProperty(PropertyChangedEvent);
+    //Super::PostEditChangeProperty(PropertyChangedEvent);
     EndpointSprite->SetSprite(HazardSprite->GetSprite());
 }

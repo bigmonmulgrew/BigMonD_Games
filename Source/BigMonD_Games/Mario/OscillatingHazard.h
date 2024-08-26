@@ -15,7 +15,7 @@ class BIGMOND_GAMES_API AOscillatingHazard : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AOscillatingHazard();
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent);
 
 protected:
 	// Called when the game starts or when spawned

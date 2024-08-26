@@ -1,6 +1,4 @@
 #include "LevelManager.h"
-
-#include "SNegativeActionButton.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
 

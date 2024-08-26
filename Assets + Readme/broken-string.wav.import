@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dquhk1u7bw6c8"
+path="res://.godot/imported/broken-string.wav-876fb9699d103b2c5daedc828bd0c719.sample"
+
+[deps]
+
+source_file="res://BigMonD_Games/Assets + Readme/broken-string.wav"
+dest_files=["res://.godot/imported/broken-string.wav-876fb9699d103b2c5daedc828bd0c719.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0
